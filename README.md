@@ -1,6 +1,7 @@
 # AzAdConnectAttributes
 
 SYNOPSIS
+
     This script is being built out to help navigate tenant mergers and demergers by identifying
     objectGUID & ms-ds-consistencyGUID attributes for your domain users and outputting the data 
     as required. Later iterations will include the ability to wipe ms-ds-consistencyGUID, set it etc.
