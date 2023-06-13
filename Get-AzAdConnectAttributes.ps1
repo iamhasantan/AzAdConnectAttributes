@@ -116,6 +116,31 @@ function Get-PopulatedUserDetails {
     
 }
 
+function Clear-msDSConsistencyGuids {
+    Write-Host "WARNING: This action will erase ms-ds-consistencyGUIDs for all users in the forest."
+    Write-Host "Before proceeding, the script will generate a backup CSV file."
+    $Confirmation = Read-Host "Do you want to proceed? (Y/N)"
+    if ($Confirmation -eq 'Y' -or $Confirmation -eq 'y') {
+        Check-AllUsers
+        $BackupPath = Read-Host "Enter the path to save the backup CSV file"
+        $BackupConfirmation = Read-Host "Are you sure you want to proceed with erasing ms-ds-consistencyGUIDs and creating a backup? (Y/N)"
+        if ($BackupConfirmation -eq 'Y' -or $BackupConfirmation -eq 'y') {
+            $Users = Get-ADUser -Filter * -Properties ms-DS-ConsistencyGUID
+            foreach ($User in $Users) {
+                $User | Set-ADUser -Clear ms-DS-ConsistencyGUID
+            }
+            Write-Host "ms-ds-consistencyGUIDs erased for all users."
+            $BackupFilename = Join-Path -Path $BackupPath -ChildPath "msDSConsistencyGUID_backup_$((Get-Date).ToString('yyyyMMddHHmmss')).csv"
+            $Users | Export-Csv $BackupFilename -NoTypeInformation
+            Write-Host "Backup CSV file created: $BackupFilename"
+        } else {
+            Write-Host "Operation cancelled. ms-ds-consistencyGUIDs were not erased."
+        }
+    } else {
+        Write-Host "Operation cancelled. ms-ds-consistencyGUIDs were not erased."
+    }
+}
+
 function Import-msDSConsistencyGuids {
     $CSVFilePath = Read-Host "Enter the path to the CSV file:"
     $BackupUsers = Import-Csv -Path $CSVFilePath
