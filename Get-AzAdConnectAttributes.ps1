@@ -121,7 +121,7 @@ function Clear-msDSConsistencyGuids {
     Write-Host "Before proceeding, the script will generate a backup CSV file."
     $Confirmation = Read-Host "Do you want to proceed? (Y/N)"
     if ($Confirmation -eq 'Y' -or $Confirmation -eq 'y') {
-        Check-AllUsers
+        Get-AllUserDetails
         $BackupPath = Read-Host "Enter the path to save the backup CSV file"
         $BackupConfirmation = Read-Host "Are you sure you want to proceed with erasing ms-ds-consistencyGUIDs and creating a backup? (Y/N)"
         if ($BackupConfirmation -eq 'Y' -or $BackupConfirmation -eq 'y') {
